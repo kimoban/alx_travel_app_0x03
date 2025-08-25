@@ -1,3 +1,8 @@
+Django>=5.2
+celery>=5.3
+rabbitmq-server
+django-celery-results
+django-celery-beat
 Django>=4.2
 djangorestframework
 drf-yasg

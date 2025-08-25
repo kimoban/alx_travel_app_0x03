@@ -64,6 +64,9 @@ INSTALLED_APPS = [
     "rest_framework",
     "corsheaders",
     "drf_yasg",
+    # Celery
+    "django_celery_results",
+    "django_celery_beat",
 ]
 
 MIDDLEWARE = [
@@ -111,6 +114,27 @@ DATABASES = {
         "PORT": env("MYSQL_PORT"),
     },
 }
+# Celery Configuration
+try:
+    CELERY_BROKER_URL = env("CELERY_BROKER_URL")
+except Exception:
+    CELERY_BROKER_URL = "amqp://localhost"
+CELERY_RESULT_BACKEND = 'django-db'
+CELERY_ACCEPT_CONTENT = ["json"]
+CELERY_TASK_SERIALIZER = "json"
+CELERY_RESULT_SERIALIZER = "json"
+CELERY_TIMEZONE = "UTC"
+
+# Django Email Backend (example using console backend for dev)
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+DEFAULT_FROM_EMAIL = 'noreply@alxtravel.com'
+# For production, use SMTP backend and configure SMTP settings
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_HOST = 'smtp.example.com'
+# EMAIL_PORT = 587
+# EMAIL_HOST_USER = 'your_username'
+# EMAIL_HOST_PASSWORD = 'your_password'
+# EMAIL_USE_TLS = True
 
 
 # Password validation

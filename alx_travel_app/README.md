@@ -17,6 +17,7 @@ Secure Configuration : Environment-based secrets management
 Cross-Origin Support : CORS headers for API accessibility  
 MySQL Database : Production-ready database setup  
 Task Queuing : Celery + RabbitMQ integration (future implementation)  
+Background Email Notifications : Booking confirmation emails sent asynchronously with Celery
 ## Prerequisites
 Python 3.12+  
 Django 5.2.4+  
@@ -25,6 +26,8 @@ MySQL 8.0+
 django-environ (for environment variables)  
 RabbitMQ (for future Celery tasks)  
 Git  
+Celery  
+django-celery-results, django-celery-beat  
 ## Installation
 1. Clone the repository  
 git clone https://github.com/your-username/alx_travel_app.git  
@@ -38,6 +41,21 @@ venv\Scripts\activate
 3. Install dependencies  
 pip install -r requirements.txt  
 4. Configure environment variables  
+5. Start RabbitMQ server  
+6. Start Celery worker (in project root):  
+        celery -A alx_travel_app worker --loglevel=info  
+7. Run Django server as usual  
+## Background Task: Booking Confirmation Email
+When a booking is created, a confirmation email is sent asynchronously using Celery. Configure your email backend in `settings.py` for production use.
+
+## Celery Configuration
+- Celery is configured in `alx_travel_app/celery.py` and `settings.py`.
+- Uses RabbitMQ as the broker (default: amqp://localhost).
+- Results stored in database via `django-celery-results`.
+
+## Email Backend
+- By default, uses Django's console backend for development.
+- For production, set SMTP settings in `settings.py`.
 Create a .env file in the project root:  
 
 SECRET_KEY='your-secret-key-here'  
