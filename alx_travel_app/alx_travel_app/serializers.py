@@ -1,5 +1,8 @@
 from rest_framework import serializers
-from .models import Listing, Booking, Review
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
+from alx_travel_app.models import Listing, Booking, Review
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
