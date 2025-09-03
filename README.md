@@ -70,7 +70,6 @@ CHAPA_SECRET_KEY=your_chapa_secret_key_here
 ## For future Celery tasks
 
 CELERY_BROKER_URL=amqp://guest:guest@localhost:5672//
-
 5. Database setup
 Create MySQL database and user:
 
@@ -78,7 +77,6 @@ CREATE DATABASE alx_travel_db;
 CREATE USER 'alx_user'@'localhost' IDENTIFIED BY 'your_mysql_password';
 GRANT ALL PRIVILEGES ON alx_travel_db.* TO 'alx_user'@'localhost';
 FLUSH PRIVILEGES;
-
 6. Run migrations
 python manage.py migrate
 
@@ -120,7 +118,7 @@ alx_travel_app/
 ├── manage.py                    # Django management script  
 │
 ├── alx_travel_app/              # Main project package  
-│   ├── __init__.py
+│   ├── *init*.py
 │   ├── asgi.py
 |   ├── requirement.txt          # Project dependencies  
 │   ├── settings.py              # Project settings  
@@ -128,7 +126,7 @@ alx_travel_app/
 │   ├── wsgi.py
 |   └── listings/                # Listings application  
         ├── migrations/          # Database migrations  
-        ├── __init__.py
+        ├── *init*.py
         ├── admin.py             # Admin configuration  
         ├── apps.py              # App configuration  
         ├── models.py            # Database models  
