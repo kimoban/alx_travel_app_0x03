@@ -40,13 +40,22 @@ if env_file.exists():
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
+
+# Production security settings
 SECRET_KEY = env("SECRET_KEY")
+DEBUG = env.bool("DEBUG")
+ALLOWED_HOSTS = env.list("DJANGO_ALLOWED_HOSTS")  # Set your production domain
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env("DEBUG")
-
-ALLOWED_HOSTS = env("DJANGO_ALLOWED_HOSTS")
+# HTTPS/SSL settings
+SECURE_SSL_REDIRECT = True
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+SECURE_HSTS_SECONDS = 31536000
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True
+SECURE_BROWSER_XSS_FILTER = True
+SECURE_CONTENT_TYPE_NOSNIFF = True
+X_FRAME_OPTIONS = 'DENY'
 
 
 # Application definition
@@ -125,16 +134,33 @@ CELERY_TASK_SERIALIZER = "json"
 CELERY_RESULT_SERIALIZER = "json"
 CELERY_TIMEZONE = "UTC"
 
-# Django Email Backend (example using console backend for dev)
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-DEFAULT_FROM_EMAIL = 'noreply@alxtravel.com'
-# For production, use SMTP backend and configure SMTP settings
-# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-# EMAIL_HOST = 'smtp.example.com'
-# EMAIL_PORT = 587
-# EMAIL_HOST_USER = 'your_username'
-# EMAIL_HOST_PASSWORD = 'your_password'
-# EMAIL_USE_TLS = True
+
+# Production Email Backend (SMTP example)
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+try:
+    EMAIL_HOST = env('EMAIL_HOST')
+except Exception:
+    EMAIL_HOST = 'smtp.example.com'
+try:
+    EMAIL_PORT = env.int('EMAIL_PORT')
+except Exception:
+    EMAIL_PORT = 587
+try:
+    EMAIL_HOST_USER = env('EMAIL_HOST_USER')
+except Exception:
+    EMAIL_HOST_USER = 'your_username'
+try:
+    EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
+except Exception:
+    EMAIL_HOST_PASSWORD = 'your_password'
+try:
+    EMAIL_USE_TLS = env.bool('EMAIL_USE_TLS')
+except Exception:
+    EMAIL_USE_TLS = True
+try:
+    DEFAULT_FROM_EMAIL = env.str('DEFAULT_FROM_EMAIL')
+except Exception:
+    DEFAULT_FROM_EMAIL = 'noreply@yourdomain.com'
 
 
 # Password validation

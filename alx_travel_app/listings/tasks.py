@@ -23,7 +23,7 @@ def send_booking_confirmation_email(booking_id):
     if subject and recipient:
         send_mail(
             subject,
-            message,
+            message or "",
             settings.DEFAULT_FROM_EMAIL,
             recipient,
             fail_silently=False,

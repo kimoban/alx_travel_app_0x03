@@ -5,7 +5,7 @@ from rest_framework.decorators import action
 from django.shortcuts import get_object_or_404
 from .models import Listing, Booking, Review, Payment
 from .serializers import ListingSerializer, BookingSerializer, ReviewSerializer, PaymentSerializer
-from .tasks import send_booking_confirmation_email
+from listings.tasks import send_booking_confirmation_email
 import os
 import requests
 from django.conf import settings
@@ -139,8 +139,9 @@ class BookingViewSet(viewsets.ModelViewSet):
         total_price = nights * listing.price_per_night
         booking = serializer.save(user=self.request.user, total_price=total_price)
         # Trigger Celery email task
-        send_booking_confirmation_email.delay(booking.id)
-    def get_queryset(self): # type: ignore
+        send_booking_confirmation_email.delay(booking.id)  # type: ignore[attr-defined]
+
+    def get_queryset(self):  # type: ignore
         """Filter bookings to show only the current user's bookings."""
         if self.request.user.is_authenticated:
             return Booking.objects.filter(user=self.request.user)
