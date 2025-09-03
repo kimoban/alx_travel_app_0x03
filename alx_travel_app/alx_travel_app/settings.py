@@ -76,6 +76,7 @@ INSTALLED_APPS = [
     # Celery
     "django_celery_results",
     "django_celery_beat",
+    "django_extensions",
 ]
 
 MIDDLEWARE = [
