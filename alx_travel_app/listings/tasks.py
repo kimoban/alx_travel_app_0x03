@@ -17,6 +17,7 @@ def get_booking_email_content(booking_id):
     except Booking.DoesNotExist:
         return None, None, None
 
+
 @shared_task
 def send_booking_confirmation_email(booking_id):
     subject, message, recipient = get_booking_email_content(booking_id)
@@ -28,3 +29,19 @@ def send_booking_confirmation_email(booking_id):
             recipient,
             fail_silently=False,
         )
+
+
+# Payment confirmation email task
+@shared_task
+def send_payment_confirmation_email(booking_id):
+    try:
+        booking = Booking.objects.get(id=booking_id)
+    except Booking.DoesNotExist:
+        return 'Booking not found.'
+    user_email = booking.user.email if hasattr(booking.user, 'email') else None
+    if not user_email:
+        return 'No email found for user.'
+    subject = 'Payment Confirmation'
+    message = f'Your payment for booking {booking.pk} has been confirmed. Thank you!'
+    send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [user_email])
+    return 'Email sent.'
