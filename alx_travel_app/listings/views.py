@@ -1,3 +1,26 @@
+# Paystack payment integration
+from .paystack import initialize_transaction, verify_transaction
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from listings.tasks import send_booking_confirmation_email
+
+class PaystackInitPaymentView(APIView):
+    def post(self, request):
+        email = request.data.get("email")
+        amount = request.data.get("amount")
+        reference = request.data.get("reference")
+        if not email or not amount or not reference:
+            return Response({"error": "email, amount, and reference are required."}, status=400)
+        result = initialize_transaction(email, float(amount), reference)
+        return Response(result)
+
+class PaystackVerifyPaymentView(APIView):
+    def get(self, request):
+        reference = request.query_params.get("reference")
+        if not reference:
+            return Response({"error": "reference is required."}, status=400)
+        result = verify_transaction(reference)
+        return Response(result)
 from rest_framework import viewsets
 from .models import Listing, Booking
 from .serializers import ListingSerializer, BookingSerializer
@@ -13,10 +36,23 @@ class BookingViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         booking = serializer.save()
-        # Import the Celery app and get the task from the app registry
-        from django_celery_beat.models import PeriodicTask  # dummy import to ensure Celery is loaded
-        from listings.tasks import send_booking_confirmation_email
-        send_booking_confirmation_email.delay(booking.pk) # type: ignore
+        # Generate a unique reference for Paystack
+        import uuid
+        reference = f"booking_{booking.pk}_{uuid.uuid4().hex[:8]}"
+        booking.paystack_reference = reference
+        # Initiate Paystack payment
+        result = initialize_transaction(booking.user.email, float(booking.total_price), reference)
+        payment_url = None
+        if result.get('status') and result.get('data'):
+            payment_url = result['data'].get('authorization_url')
+        booking.save()
+        # Optionally, send booking confirmation email
+        try:
+            send_booking_confirmation_email.delay(booking.pk) # type: ignore
+        except Exception:
+            pass
+        # Attach payment_url to the booking instance for response
+        booking._payment_url = payment_url
 
 
 # Payment endpoints for Chapa integration

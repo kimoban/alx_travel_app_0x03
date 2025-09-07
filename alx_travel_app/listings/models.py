@@ -23,6 +23,9 @@ class Booking(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    paystack_reference = models.CharField(max_length=100, blank=True, null=True, unique=True)
+    paystack_payment_status = models.CharField(max_length=20, default="Pending")
+
     def __str__(self):
         return f"{self.user} - {self.listing} ({self.start_date} to {self.end_date})"
 
