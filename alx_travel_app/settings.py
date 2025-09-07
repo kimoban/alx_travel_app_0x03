@@ -21,7 +21,7 @@ env = environ.Env(
     # Set casting and default values
     DEBUG=(bool, True),
     SECRET_KEY=(str, "SECRET_KEY"),
-    DJANGO_ALLOWED_HOSTS=(list, ["localhost", "127.0.0.1"]),
+    DJANGO_ALLOWED_HOSTS=(list, ["alx-travel-app-web.onrender.com", "localhost", "127.0.0.1"]),
     DB_NAME=(str, "DB_NAME"),
     DB_USER=(str, "DB_USER"),
     DB_PASSWORD=(str, "DB_PASSWORD"),
