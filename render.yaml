@@ -1,0 +1,25 @@
+services:
+  - type: web
+    name: alx-travel-app-web
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn alx_travel_app.wsgi
+    envVars:
+      - key: DJANGO_SETTINGS_MODULE
+        value: alx_travel_app.settings
+      - key: SECRET_KEY
+        value: <your-secret-key>
+      - key: DATABASE_URL
+        value: <your-db-url>
+      - key: CELERY_BROKER_URL
+        value: <your-broker-url>
+      - key: CELERY_RESULT_BACKEND
+        value: <your-backend-url>
+  - type: worker
+    name: alx-travel-app-celery
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: celery -A alx_travel_app worker --loglevel=info
+    envVars:
+      - key: DJANGO_SETTINGS_MODULE
+        value: alx_travel_app.settings
