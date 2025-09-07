@@ -1,3 +1,5 @@
+# Email backend for development
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 # alx_travel_app/settings.py
 
 """
