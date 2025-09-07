@@ -1,0 +1,18 @@
+/* Custom Swagger UI CSS */
+.swagger-ui .topbar {
+  background: #1a2238;
+}
+.swagger-ui .topbar .topbar-wrapper img {
+  content: url("/static/branding/logo.png");
+  height: 40px;
+}
+.swagger-ui .topbar .topbar-wrapper span {
+  color: #fff;
+  font-weight: bold;
+  font-size: 1.2em;
+}
+.swagger-ui .info {
+  background: #e0e7ef;
+  border-radius: 8px;
+  padding: 16px;
+}

@@ -20,15 +20,21 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 from .views import welcome
+
 from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
 from rest_framework import permissions
+from django.conf import settings
+from django.conf.urls.static import static
 
 schema_view = get_schema_view(
     openapi.Info(
-        title="ALX Travel App API",
+        title="ALXbnb Travel API",
         default_version="v1",
-        description="API documentation for ALX Travel App",
+        description="A modern travel and booking API inspired by Airbnb.\n\nFeatures: Listings, Bookings, Payments, User Auth, and more.",
+        contact=openapi.Contact(email="support@alxbnb.com", name="ALXbnb Support", url="https://alx-travel-app-web.onrender.com/"),
+        license=openapi.License(name="MIT License"),
+        x_logo={"url": "/static/branding/logo.png", "altText": "ALXbnb Logo"},
     ),
     public=True,
     permission_classes=(permissions.AllowAny,),
@@ -46,3 +52,7 @@ urlpatterns = [
     path("redoc/", schema_view.with_ui("redoc", cache_timeout=0), name="schema-redoc"),
     path("accounts/", include("django.contrib.auth.urls")),
 ]
+
+# Serve static files in development
+if settings.DEBUG:
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
